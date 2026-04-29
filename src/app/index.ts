@@ -4,16 +4,16 @@ import {
   registerMessageListener,
   type TelegramModule,
 } from "../adapters/telegram/index.js";
+import { registerBalanceCommand } from "@/adapters/telegram/commands/balanceCommand.js";
 
 const bot = new Telegraf(variables.BOT_TOKEN);
 
-const modules: TelegramModule[] = [registerMessageListener];
+const modules: TelegramModule[] = [
+  registerBalanceCommand,
+  registerMessageListener,
+];
 
 modules.forEach((m) => m(bot));
-
-bot.on("message", (ctx) => {
-  console.log("Прием");
-});
 
 bot.launch();
 

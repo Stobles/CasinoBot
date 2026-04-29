@@ -5,7 +5,8 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["*"],
+      "@features/*": ["features/*"]
     },
 
     "module": "nodenext",
@@ -17,6 +18,7 @@
     "declaration": true,
     "declarationMap": true,
 
+    "ignoreDeprecations": "6.0",
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
 
@@ -29,5 +31,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["*/**.ts", "src/app/index.ts"]
+  "include": ["src"]
 }
