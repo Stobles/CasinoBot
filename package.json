@@ -1,0 +1,39 @@
+{
+  "name": "kazik_bot",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx ./src/app/index.ts",
+    "migrate:dev": "npx prisma migrate dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stobles/CasinoBot.git"
+  },
+  "keywords": [
+    "telegram"
+  ],
+  "author": "Stoble",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stobles/CasinoBot/issues"
+  },
+  "homepage": "https://github.com/Stobles/CasinoBot#readme",
+  "description": "",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "pg": "^8.20.0",
+    "telegraf": "^4.16.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/pg": "^8.20.0",
+    "prisma": "^7.8.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
