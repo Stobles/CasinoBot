@@ -61,14 +61,15 @@ model ChatUser {
 model GameRound {
   id String @id @default(cuid())
 
+  gameType GameType
+
   chatId String
   chat   Chat   @relation(fields: [chatId], references: [id])
 
   status RoundStatus
   endsAt DateTime
 
-  resultColor  RouletteColor?
-  resultNumber Int?
+  result Json?
 
   createdAt DateTime @default(now())
 
@@ -89,8 +90,7 @@ model RoundBet {
 
   amount Int
 
-  color  RouletteColor?
-  number Int?
+  data Json
 
   createdAt DateTime @default(now())
 
@@ -104,7 +104,7 @@ model Transaction {
   chatUserId String
   chatUser   ChatUser @relation(fields: [chatUserId], references: [id])
 
-  amount Int // + / -
+  amount Int
   type   TransactionType
   reason String?
 
@@ -112,6 +112,10 @@ model Transaction {
 
   @@index([chatUserId])
   @@index([createdAt])
+}
+
+enum GameType {
+  ROULETTE
 }
 
 enum TransactionType {
