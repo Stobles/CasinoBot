@@ -25,6 +25,7 @@
     "noFallthroughCasesInSwitch": true,
 
     // Recommended Options
+    "esModuleInterop": true,
     "strict": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
