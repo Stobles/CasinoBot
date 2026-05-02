@@ -1,11 +1,4 @@
-export type BetData = RouletteBetData;
+export type { BetData, RouletteBetData } from "./domain/types.js";
+export { ROULETTE_BET_COLOR } from "./domain/types.js";
 
-export type RouletteBetData = {
-  color?: string;
-  number?: number | undefined;
-};
-
-export const ROULETTE_BET_COLOR = {
-  black: "Черное",
-  red: "Красное",
-};
+export { createBet } from "./services/createBet.js";

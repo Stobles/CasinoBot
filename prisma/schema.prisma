@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -73,7 +73,8 @@ model GameRound {
 
   createdAt DateTime @default(now())
 
-  bets RoundBet[]
+  bets         RoundBet[]
+  transactions Transaction[]
 
   @@index([chatId, status])
   @@index([endsAt])
@@ -108,7 +109,9 @@ model Transaction {
   type   TransactionType
   reason String?
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime   @default(now())
+  gameRound   GameRound? @relation(fields: [gameRoundId], references: [id])
+  gameRoundId String?
 
   @@index([chatUserId])
   @@index([createdAt])

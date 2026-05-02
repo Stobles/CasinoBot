@@ -1,5 +1,5 @@
-import type { ChatUserEntity } from "@/entities/chat-user/index.js";
-import { prisma } from "../../shared/lib/db.js";
+import { prisma } from "@/shared/lib/db.js";
+import type { ChatUserEntity } from "../domain/types.js";
 
 export async function ensureChatUser(
   userId: string,

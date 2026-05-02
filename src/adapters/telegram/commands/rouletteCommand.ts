@@ -1,5 +1,5 @@
-import { createGameRound } from "@/features/game-round/create-game-round.js";
-import { ensureSession } from "@/processes/session/ensure-session.js";
+import { createGameRound } from "@/entities/game-round/services/create-game-round.js";
+import { ensureSession } from "@/features/session/ensure-session.js";
 import type { Telegraf } from "telegraf";
 
 export function registerRouletteCommand(bot: Telegraf) {

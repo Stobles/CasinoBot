@@ -1,5 +1,5 @@
-import { getBalanceStatus } from "@/entities/balance/index.js";
-import { ensureSession } from "@/processes/session/ensure-session.js";
+import { getBalanceStatus } from "@/entities/chat-user/index.js";
+import { ensureSession } from "@/features/session/ensure-session.js";
 import type { Telegraf } from "telegraf";
 
 export function registerBalanceCommand(bot: Telegraf) {

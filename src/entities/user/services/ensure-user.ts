@@ -1,8 +1,5 @@
-import type {
-  CreateUserPayload,
-  UserEntity,
-} from "../../entities/user/index.js";
-import { prisma } from "../../shared/lib/db.js";
+import { prisma } from "@/shared/lib/db.js";
+import type { CreateUserPayload, UserEntity } from "../domain/types.js";
 
 export async function ensureUser(data: CreateUserPayload): Promise<UserEntity> {
   return await prisma.user.upsert({

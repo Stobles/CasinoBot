@@ -15,7 +15,6 @@ class RoundEventService {
 
   private handlers = new Map<RoundEvent["type"], Listener<any>>();
 
-  // регистрация обработчиков (аналог addListener)
   on<T extends RoundEvent["type"]>(
     type: T,
     listener: Listener<Extract<RoundEvent, { type: T }>>,
@@ -23,7 +22,6 @@ class RoundEventService {
     this.handlers.set(type, listener);
   }
 
-  // emit = кладём задачу в очередь
   async emit(event: RoundEvent, opts?: { delay?: number }) {
     console.log("Создан emit");
     await this.queue.add(event.type, event, {
@@ -31,7 +29,6 @@ class RoundEventService {
     });
   }
 
-  // запуск worker (consumer)
   startWorker() {
     return new Worker(
       "round",

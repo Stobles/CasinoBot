@@ -1,3 +1,5 @@
+import { left, right, type Either } from "@/shared/lib/either.js";
+
 type BetColor = "black" | "red";
 
 type ParsedBet = {
@@ -18,16 +20,26 @@ const COLOR_MAP: Record<string, BetColor> = {
   red: "red",
 };
 
-export function parseBetCommand(input: string): ParsedBet {
+export function parseBetCommand(
+  input: string,
+): Either<
+  | "not-enough-args"
+  | "wrong-command"
+  | "wrong-color"
+  | "wrong-number"
+  | "wrong-red"
+  | "wrong-black",
+  ParsedBet
+> {
   const parts = input.trim().split(/\s+/);
 
   // ожидаем: /bet <color> [number] <amount>
   if (parts.length < 3) {
-    throw new Error("Недостаточно аргументов");
+    return left("not-enough-args");
   }
 
   if (parts[0] !== "/dep") {
-    throw new Error("Неверная команда");
+    return left("wrong-command");
   }
 
   // --- COLOR ---
@@ -35,7 +47,7 @@ export function parseBetCommand(input: string): ParsedBet {
   const color = COLOR_MAP[colorRaw];
 
   if (!color) {
-    throw new Error("Некорректный цвет");
+    return left("wrong-color");
   }
 
   // --- дальше нужно понять: есть ли число ---
@@ -50,7 +62,7 @@ export function parseBetCommand(input: string): ParsedBet {
     number = Number(parts[2]);
 
     if (!Number.isInteger(number) || number < 1 || number > 36) {
-      throw new Error("Число должно быть от 1 до 36");
+      return left("wrong-number");
     }
 
     amountRaw = parts[3]!;
@@ -68,17 +80,17 @@ export function parseBetCommand(input: string): ParsedBet {
     const isEven = number % 2 === 0;
 
     if (color === "red" && !isEven) {
-      throw new Error("Красное должно быть на четных числах");
+      return left("wrong-red");
     }
 
     if (color === "black" && isEven) {
-      throw new Error("Черное должно быть на нечетных числах");
+      return left("wrong-black");
     }
   }
 
-  return {
+  return right({
     color,
     number,
     amount,
-  };
+  });
 }

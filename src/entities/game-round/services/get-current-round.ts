@@ -1,9 +1,6 @@
-import {
-  mapGameRound,
-  type GameRoundEntity,
-  type GameRoundTypes,
-} from "@/entities/game-round/index.js";
 import { prisma } from "@/shared/lib/db.js";
+import type { GameRoundEntity, GameRoundTypes } from "../domain/types.js";
+import { mapGameRound } from "../domain/helpers.js";
 
 export async function getCurrentRound(
   type: GameRoundTypes,
