@@ -1,5 +1,3 @@
-import { variables } from "@/shared/config/variables.js";
-import { Telegraf } from "telegraf";
 import {
   registerMessageListener,
   type TelegramModule,
@@ -8,9 +6,10 @@ import { registerBalanceCommand } from "@/adapters/telegram/commands/balanceComm
 import { registerRouletteCommand } from "@/adapters/telegram/commands/rouletteCommand.js";
 import { roundEvents } from "@/shared/queues/game-round.js";
 import { bot } from "@/shared/lib/bot.js";
-import { resolveGameRound } from "@/features/game-round/resolve-game-round.js";
-import { ensureChat } from "@/features/chat/ensure-chat.js";
+import { resolveGameRound } from "@/entities/game-round/services/resolve-game-round.js";
 import { registerBetCommand } from "@/adapters/telegram/commands/betCommand.js";
+
+import "dotenv/config";
 
 const modules: TelegramModule[] = [
   registerBalanceCommand,

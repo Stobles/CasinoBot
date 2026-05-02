@@ -1,16 +1,14 @@
-import {
-  getEndOfGameRound,
-  type GameRoundTypes,
-} from "@/entities/game-round/index.js";
 import { prisma } from "@/shared/lib/db.js";
 import { roundEvents } from "@/shared/queues/game-round.js";
+import { getEndOfGameRound, mapGameRound } from "../domain/helpers.js";
+import type { GameRoundEntity, GameRoundTypes } from "../domain/types.js";
 
 export async function createGameRound(
   type: GameRoundTypes,
   chatId: string,
   telegramChatId: bigint,
   duration: number = 60,
-) {
+): Promise<GameRoundEntity> {
   const gameRound = await prisma.gameRound.findFirst({
     where: { chatId, status: "OPEN", gameType: type },
   });
@@ -39,5 +37,5 @@ export async function createGameRound(
     { delay: 60000 },
   );
 
-  return newGameRound;
+  return mapGameRound(newGameRound);
 }

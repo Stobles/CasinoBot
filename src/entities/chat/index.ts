@@ -1,10 +1,3 @@
-export type ChatEntity = {
-  id: string;
-  telegramId: bigint;
-  title: string | null;
-};
+export type { ChatEntity, CreateChatPayload } from "./domain/types.js";
 
-export type CreateChatPayload = {
-  title?: string;
-  telegramId: number;
-};
+export { ensureChat } from "./services/ensure-chat.js";

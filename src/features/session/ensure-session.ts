@@ -1,7 +1,7 @@
+import { ensureChatUser } from "@/entities/chat-user/index.js";
+import { ensureChat } from "@/entities/chat/index.js";
+import { ensureUser } from "@/entities/user/index.js";
 import { Context } from "telegraf";
-import { ensureUser } from "@features/user/ensure-user.js";
-import { ensureChat } from "@features/chat/ensure-chat.js";
-import { ensureChatUser } from "@features/chat-user/ensure-chat-user.js";
 
 export async function ensureSession(ctx: Context) {
   if (!ctx.from || !ctx.chat) {
