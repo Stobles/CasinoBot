@@ -10,11 +10,13 @@ import { roundEvents } from "@/shared/queues/game-round.js";
 import { bot } from "@/shared/lib/bot.js";
 import { resolveGameRound } from "@/features/game-round/resolve-game-round.js";
 import { ensureChat } from "@/features/chat/ensure-chat.js";
+import { registerBetCommand } from "@/adapters/telegram/commands/betCommand.js";
 
 const modules: TelegramModule[] = [
   registerBalanceCommand,
   registerRouletteCommand,
   registerMessageListener,
+  registerBetCommand,
 ];
 
 modules.forEach((m) => m(bot));

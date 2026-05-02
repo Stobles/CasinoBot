@@ -36,7 +36,7 @@ export async function createGameRound(
         chatTelegramId: telegramChatId.toString(),
       },
     },
-    { delay: 1000 },
+    { delay: 60000 },
   );
 
   return newGameRound;
