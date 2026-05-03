@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch ./src/app/index.ts",
     "seed": "npx prisma db seed",
-    "migrate:dev": "npx prisma migrate dev && npx prisma generate"
+    "migrate:dev": "npx prisma migrate dev && npx prisma generate",
+    "migrate:dev:seed": "npm run migrate:dev && npm run seed"
   },
   "repository": {
     "type": "git",

@@ -4,12 +4,13 @@ import type { Telegraf } from "telegraf";
 import { parseBetCommand } from "../helpers/getBetValues.js";
 import { ROULETTE_BET_COLOR } from "@/entities/bet/index.js";
 import { placeBet } from "@/features/betting/place-bet.js";
+import { ROULETTE_VALUES } from "@/entities/game-round/index.js";
 
 export function registerBetCommand(bot: Telegraf) {
   bot.command("dep", async (ctx) => {
-    const { chat, chatUser } = await ensureSession(ctx);
+    const { user, chat, chatUser } = await ensureSession(ctx);
 
-    const parsedCommand = parseBetCommand(ctx.message.text);
+    const parsedCommand = parseBetCommand(ctx.message.text, ROULETTE_VALUES);
 
     if (parsedCommand.type === "Left") {
       await ctx.reply("Неправильная команда");
@@ -31,10 +32,8 @@ export function registerBetCommand(bot: Telegraf) {
         number: value.number,
       });
 
-      console.log(bet);
-
       await ctx.reply(
-        `Создана ставка на ${ROULETTE_BET_COLOR[value.color]} ${value.number || ""} в размере ${value.amount}`,
+        `@${user.username} сделал ставку на ${ROULETTE_BET_COLOR[value.color]} ${value.number || ""} в размере ${value.amount} тугриков`,
       );
     } catch (e) {
       if (e === "bet-limit-exceeded")

@@ -1,5 +1,42 @@
 import type { GameRound } from "@generated/prisma/client.js";
 import type { GameRoundEntity, GameRoundRouletteResult } from "./types.js";
+import { left, right, type Either } from "@/shared/lib/either.js";
+
+const ROULETTE_COLORS = ["black", "red", "green"] as const;
+
+const ROULETTE_NUMBERS = Array.from({ length: 37 }, (_, index) => index);
+
+export const ROULETTE_VALUES: Record<
+  (typeof ROULETTE_COLORS)[number],
+  number[]
+> = {
+  black: [15, 4, 2, 17, 6, 13, 11, 8, 10, 24, 33, 20, 31, 22, 29, 28, 35, 26],
+  red: [32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 14, 9, 18, 7, 12, 3],
+  green: [0],
+};
+
+function getRandomFromArray<T extends unknown[] | readonly unknown[]>(
+  arr: T,
+): T[number] {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function getRouletteGameResult(): Either<
+  "no-valid-entry",
+  { color: string; number: number }
+> {
+  const number = getRandomFromArray(ROULETTE_NUMBERS);
+
+  const entry = Object.entries(ROULETTE_VALUES).find(([_, values]) =>
+    values.includes(number),
+  );
+
+  if (!entry) {
+    return left("no-valid-entry");
+  }
+
+  return right({ color: entry[0], number });
+}
 
 export function getEndOfGameRound(durationSeconds: number): Date {
   return new Date(Date.now() + durationSeconds * 1000);

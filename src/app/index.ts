@@ -10,6 +10,7 @@ import { resolveGameRound } from "@/entities/game-round/services/resolve-game-ro
 import { registerBetCommand } from "@/adapters/telegram/commands/betCommand.js";
 
 import "dotenv/config";
+import { resolveRound } from "@/features/round/resolve-round.js";
 
 const modules: TelegramModule[] = [
   registerBalanceCommand,
@@ -23,10 +24,11 @@ modules.forEach((m) => m(bot));
 roundEvents.startWorker();
 
 roundEvents.on("resolveRound", async ({ data }) => {
-  console.log("Ставка закрыта");
-  await resolveGameRound(data.roundId);
+  const { roundId, chatTelegramId } = data;
 
-  bot.telegram.sendMessage(data.chatTelegramId.toString(), "Ставка закрыта");
+  await resolveRound(roundId);
+
+  bot.telegram.sendMessage(chatTelegramId.toString(), "Ставка закрыта");
 });
 
 bot.launch();

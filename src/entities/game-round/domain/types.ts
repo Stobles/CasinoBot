@@ -13,7 +13,9 @@ export type GameRoundTypes = "ROULETTE";
 
 export type GameRoundStatus = "OPEN" | "CLOSED" | "RESOLVED";
 
+export type GameRoundResult = GameRoundRouletteResult;
+
 export type GameRoundRouletteResult = {
   color: string;
-  number: string;
+  number: number;
 };

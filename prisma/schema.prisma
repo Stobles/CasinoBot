@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -89,6 +89,9 @@ model RoundBet {
   chatUserId String
   chatUser   ChatUser @relation(fields: [chatUserId], references: [id])
 
+  type   GameType
+  status BetStatus
+
   amount Int
 
   data Json
@@ -133,6 +136,11 @@ enum RoundStatus {
   OPEN
   CLOSED
   RESOLVED
+}
+
+enum BetStatus {
+  OPEN
+  CLOSED
 }
 
 enum RouletteColor {

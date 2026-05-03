@@ -22,13 +22,9 @@ const COLOR_MAP: Record<string, BetColor> = {
 
 export function parseBetCommand(
   input: string,
+  values: Record<string, number[]>,
 ): Either<
-  | "not-enough-args"
-  | "wrong-command"
-  | "wrong-color"
-  | "wrong-number"
-  | "wrong-red"
-  | "wrong-black",
+  "not-enough-args" | "wrong-command" | "wrong-color" | "wrong-number",
   ParsedBet
 > {
   const parts = input.trim().split(/\s+/);
@@ -38,7 +34,7 @@ export function parseBetCommand(
     return left("not-enough-args");
   }
 
-  if (parts[0] !== "/dep") {
+  if (parts[0] !== "/bet") {
     return left("wrong-command");
   }
 
@@ -46,11 +42,11 @@ export function parseBetCommand(
   const colorRaw = parts[1]!.toLowerCase();
   const color = COLOR_MAP[colorRaw];
 
-  if (!color) {
+  if (!color || !values[color]) {
     return left("wrong-color");
   }
 
-  // --- дальше нужно понять: есть ли число ---
+  // --- NUMBER / AMOUNT ---
   let number: number | undefined;
   let amountRaw: string;
 
@@ -61,7 +57,12 @@ export function parseBetCommand(
     // /bet красное 12 100
     number = Number(parts[2]);
 
-    if (!Number.isInteger(number) || number < 1 || number > 36) {
+    if (!Number.isInteger(number)) {
+      return left("wrong-number");
+    }
+
+    // ✅ ключевая проверка через values
+    if (!values[color].includes(number)) {
       return left("wrong-number");
     }
 
@@ -73,19 +74,6 @@ export function parseBetCommand(
 
   if (!Number.isFinite(amount) || amount <= 0) {
     throw new Error("Некорректная ставка");
-  }
-
-  // --- ДОП. ВАЛИДАЦИЯ (твое правило) ---
-  if (number !== undefined) {
-    const isEven = number % 2 === 0;
-
-    if (color === "red" && !isEven) {
-      return left("wrong-red");
-    }
-
-    if (color === "black" && isEven) {
-      return left("wrong-black");
-    }
   }
 
   return right({
