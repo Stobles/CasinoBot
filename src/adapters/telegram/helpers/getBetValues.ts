@@ -34,7 +34,7 @@ export function parseBetCommand(
     return left("not-enough-args");
   }
 
-  if (parts[0] !== "/bet") {
+  if (parts[0] !== "/dep") {
     return left("wrong-command");
   }
 

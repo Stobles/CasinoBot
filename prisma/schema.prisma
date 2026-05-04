@@ -140,7 +140,8 @@ enum RoundStatus {
 
 enum BetStatus {
   OPEN
-  CLOSED
+  WON
+  LOST
 }
 
 enum RouletteColor {

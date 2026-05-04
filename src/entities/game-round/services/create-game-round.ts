@@ -33,7 +33,7 @@ export async function createGameRound(
         chatTelegramId: telegramChatId.toString(),
       },
     },
-    { delay: 2000 },
+    { delay: 10000 },
   );
 
   return right(mapGameRound(newGameRound));

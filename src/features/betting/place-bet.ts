@@ -35,6 +35,8 @@ export async function placeBet(
 
     const bet = await tx.roundBet.create({
       data: {
+        type: "ROULETTE",
+        status: "OPEN",
         chatUserId,
         roundId,
         amount,

@@ -1,4 +1,6 @@
+import { ROULETTE_BET_COFF } from "@/entities/bet/index.js";
 import type { GameRoundRouletteResult } from "@/entities/game-round/index.js";
+import type { RouletteResult } from "@/kernel/game/roulette/types.js";
 import { prisma } from "@/shared/lib/db.js";
 
 export async function payoutBet(
@@ -11,16 +13,23 @@ export async function payoutBet(
       where: { roundId, status: "OPEN" },
     });
 
-    for (const bet of bets) {
-      const isColorMatch = bet.data === result.color;
+    console.log(bets);
 
-      const isNumberMatch =
-        bet.number !== null ? bet.number === result.number : true;
+    for (const bet of bets) {
+      const betData = bet.data as RouletteResult;
+      console.log(betData.color, result.color);
+      const isColorMatch = betData.color === result.color;
+
+      const isNumberMatch = betData.number
+        ? betData.number === result.number
+        : true;
 
       const isWin = isColorMatch && isNumberMatch;
 
+      console.log(isWin, isColorMatch, isNumberMatch);
+
       if (!isWin) {
-        await tx.bet.update({
+        await tx.roundBet.update({
           where: { id: bet.id },
           data: { status: "LOST" },
         });
@@ -28,7 +37,9 @@ export async function payoutBet(
         continue;
       }
 
-      const payout = bet.amount * 2;
+      console.log(bet);
+
+      const payout = bet.amount * ROULETTE_BET_COFF[result.color];
 
       // 2. обновляем баланс пользователя
       await tx.chatUser.update({
@@ -41,7 +52,7 @@ export async function payoutBet(
       });
 
       // 3. помечаем ставку как выигрыш
-      await tx.bet.update({
+      await tx.roundBet.update({
         where: { id: bet.id },
         data: { status: "WON" },
       });
@@ -50,7 +61,6 @@ export async function payoutBet(
       await tx.transaction.create({
         data: {
           chatUserId: bet.chatUserId,
-          betId: bet.id,
           amount: payout,
           type: "WIN",
         },
