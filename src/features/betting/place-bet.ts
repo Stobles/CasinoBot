@@ -1,13 +1,36 @@
-import type { BetData } from "@/entities/bet/index.js";
+import { mapBetEntity } from "@/entities/bet/domain/helpers.js";
+import type { BetData, BetEntity } from "@/entities/bet/index.js";
 import { prisma } from "@/shared/lib/db.js";
+import { left, matchEither, right, type Either } from "@/shared/lib/either.js";
 
 export async function placeBet(
   amount: number,
   roundId: string,
   chatUserId: string,
   data: BetData,
-) {
+): Promise<
+  Either<
+    "bet-already-placed" | "insufficient-balance" | "bet-limit-exceeded",
+    BetEntity
+  >
+> {
   return await prisma.$transaction(async (tx) => {
+    const existingBet = await tx.roundBet.findFirst({
+      where: {
+        chatUserId,
+        roundId,
+        status: "OPEN",
+        type: "ROULETTE",
+        payload: {
+          equals: data,
+        },
+      },
+    });
+
+    if (existingBet) {
+      return left("bet-already-placed");
+    }
+
     const balanceUpdate = await tx.chatUser.updateMany({
       where: {
         id: chatUserId,
@@ -19,7 +42,7 @@ export async function placeBet(
     });
 
     if (balanceUpdate.count === 0) {
-      throw new Error("INSUFFICIENT_BALANCE");
+      return left("insufficient-balance");
     }
 
     const betsCount = await tx.roundBet.count({
@@ -30,7 +53,7 @@ export async function placeBet(
     });
 
     if (betsCount >= 3) {
-      throw new Error("BET_LIMIT_EXCEEDED");
+      return left("bet-limit-exceeded");
     }
 
     const bet = await tx.roundBet.create({
@@ -40,7 +63,7 @@ export async function placeBet(
         chatUserId,
         roundId,
         amount,
-        data,
+        payload: data,
       },
     });
 
@@ -52,6 +75,23 @@ export async function placeBet(
       },
     });
 
-    return bet;
+    return right(mapBetEntity(bet));
+  });
+}
+
+export function getPlaceBetError(
+  result: Either<
+    "bet-already-placed" | "insufficient-balance" | "bet-limit-exceeded",
+    BetEntity
+  >,
+) {
+  return matchEither(result, {
+    right: () => null,
+    left: (e) =>
+      ({
+        "insufficient-balance": "❌️ Ты бедный",
+        "bet-limit-exceeded": "❌️ Превышено количество ставок",
+        "bet-already-placed": "❌️ Такая ставка уже существует",
+      })[e],
   });
 }

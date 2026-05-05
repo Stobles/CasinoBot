@@ -40,7 +40,7 @@ export async function payoutBet(
       });
 
       for (const bet of winners) {
-        const payout = bet.amount * ROULETTE_COEFFICIENTS[bet.data.type];
+        const payout = bet.amount * ROULETTE_COEFFICIENTS[bet.payload.type];
 
         await tx.chatUser.update({
           where: { id: bet.chatUserId },

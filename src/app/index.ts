@@ -4,6 +4,7 @@ import {
   registerDailyCommand,
   registerMessageListener,
   registerRouletteCommand,
+  registerTopCommand,
   type TelegramModule,
 } from "../adapters/telegram/index.js";
 import { roundEvents } from "@/shared/queues/game-round.js";
@@ -20,6 +21,7 @@ const telegramModules: TelegramModule[] = [
   registerMessageListener,
   registerDailyCommand,
   registerBetCommand,
+  registerTopCommand,
 ];
 
 const roundServiceModules: RoundServiceModule[] = [

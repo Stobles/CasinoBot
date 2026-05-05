@@ -23,8 +23,14 @@ export function getBalanceStatus(balance: number) {
 
 export function formatChatUsersTop(top: ChatUserEntity[]): string {
   return top
-    .map((u, i) => `${i + 1}. @${u.username} — ${u.balance}`)
+    .map((u, i) => `${i + 1}\\. *@${u.username}* — *${u.balance} тугриков*`)
     .join("\n");
+}
+
+export function buildChatUsersTop(
+  chatUsers: ChatUserEntity[],
+): ChatUserEntity[] {
+  return [...chatUsers].sort((a, b) => b.balance - a.balance);
 }
 
 export function mapChatUser(user: ChatUser & { user: User }): ChatUserEntity {

@@ -95,7 +95,7 @@ model RoundBet {
 
   amount Int
 
-  data Json
+  payload Json
 
   createdAt DateTime @default(now())
 
