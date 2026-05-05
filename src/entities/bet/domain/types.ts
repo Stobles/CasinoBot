@@ -7,7 +7,7 @@ export type BetEntity = {
   type: BetType;
   status: string;
   amount: number;
-  data: BetData;
+  payload: BetData;
 };
 
 export type BetData =

@@ -5,7 +5,7 @@ import path from "node:path";
 import type { Telegraf } from "telegraf";
 
 export function registerRouletteCommand(bot: Telegraf) {
-  bot.command("roulette", async (ctx) => {
+  bot.command("roll", async (ctx) => {
     const { chat } = await ensureSession(ctx);
 
     const gameRound = await createGameRound(
@@ -16,6 +16,7 @@ export function registerRouletteCommand(bot: Telegraf) {
 
     if (gameRound.type === "Left") {
       await ctx.reply("❌ Рулетка уже создана в чате");
+      return;
     }
     const rouletteImage = path.resolve(
       process.cwd(),

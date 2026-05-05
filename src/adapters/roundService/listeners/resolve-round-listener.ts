@@ -51,22 +51,22 @@ export function registerResolveRoundListener(eventService: IRoundEventService) {
     const winnersText =
       winnerUsers.length > 0
         ? winnerUsers.map((b) => `- @${b.username}`).join("\n")
-        : "Нема";
+        : "Отсутствуют";
 
     const losersText =
       loserUsers.length > 0
         ? loserUsers.map((b) => `- @${b.username}`).join("\n")
-        : "Нема";
+        : "Отсутствуют";
 
     bot.telegram.sendMessage(
       chatTelegramId,
       `🎯 Выпало: ${gameRound.value.result.number} (${ROULETTE_COLORS_MAP[gameRound.value.result.color]})
 
 🏆 Победители:
- ${winnersText}
+  ${winnersText}
 
 💀 Проигравшие:
- ${losersText}`,
+  ${losersText}`,
     );
   });
 }

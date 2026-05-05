@@ -9,7 +9,7 @@ export function mapBetEntity(bet: RoundBet): BetEntity {
     chatUserId: bet.chatUserId,
     type: bet.type,
     status: bet.status,
-    data: bet.data as BetData,
+    payload: bet.payload as BetData,
     amount: bet.amount,
   };
 }
@@ -25,7 +25,7 @@ export function splitRouletteBets(
   const losers: BetEntity[] = [];
 
   for (const bet of bets) {
-    const data = bet.data;
+    const data = bet.payload;
 
     let isWin = false;
 
