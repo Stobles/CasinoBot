@@ -1,7 +1,7 @@
 export type {
   GameRoundEntity,
+  GameRoundResult,
   GameRoundRouletteEntity,
-  GameRoundRouletteResult,
   GameRoundStatus,
   GameRoundTypes,
 } from "./domain/types.js";

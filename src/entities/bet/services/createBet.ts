@@ -15,6 +15,8 @@ export async function createBet(
 
   return await prisma.roundBet.create({
     data: {
+      status: "OPEN",
+      type: "ROULETTE",
       roundId,
       chatUserId,
       amount,

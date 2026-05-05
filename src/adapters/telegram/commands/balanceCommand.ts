@@ -8,6 +8,8 @@ export function registerBalanceCommand(bot: Telegraf) {
 
     const balance = chatUser.balance;
 
-    await ctx.reply(`💰 Баланс: ${balance} (${getBalanceStatus(balance)})`);
+    await ctx.reply(
+      `💰 Баланс: ${balance} тугриков (${getBalanceStatus(balance)})`,
+    );
   });
 }

@@ -1,3 +1,5 @@
+import type { RouletteResult } from "@/kernel/game/roulette/types.js";
+
 export type GameRoundEntity = GameRoundRouletteEntity;
 
 export type GameRoundRouletteEntity = {
@@ -6,14 +8,11 @@ export type GameRoundRouletteEntity = {
   chatId: string;
   status: GameRoundStatus;
   endsAt: Date;
-  result: GameRoundRouletteResult | null;
+  result: RouletteResult | null;
 };
 
 export type GameRoundTypes = "ROULETTE";
 
 export type GameRoundStatus = "OPEN" | "CLOSED" | "RESOLVED";
 
-export type GameRoundRouletteResult = {
-  color: string;
-  number: string;
-};
+export type GameRoundResult = RouletteResult;

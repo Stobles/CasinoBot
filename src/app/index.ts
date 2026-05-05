@@ -1,34 +1,33 @@
 import {
+  registerBalanceCommand,
+  registerBetCommand,
   registerMessageListener,
+  registerRouletteCommand,
   type TelegramModule,
 } from "../adapters/telegram/index.js";
-import { registerBalanceCommand } from "@/adapters/telegram/commands/balanceCommand.js";
-import { registerRouletteCommand } from "@/adapters/telegram/commands/rouletteCommand.js";
 import { roundEvents } from "@/shared/queues/game-round.js";
 import { bot } from "@/shared/lib/bot.js";
-import { resolveGameRound } from "@/entities/game-round/services/resolve-game-round.js";
-import { registerBetCommand } from "@/adapters/telegram/commands/betCommand.js";
+
+import type { RoundServiceModule } from "@/adapters/roundService/types/index.js";
+import { registerResolveRoundListener } from "@/adapters/roundService/index.js";
 
 import "dotenv/config";
 
-const modules: TelegramModule[] = [
+const telegramModules: TelegramModule[] = [
   registerBalanceCommand,
   registerRouletteCommand,
   registerMessageListener,
   registerBetCommand,
 ];
 
-modules.forEach((m) => m(bot));
+const roundServiceModules: RoundServiceModule[] = [
+  registerResolveRoundListener,
+];
+
+telegramModules.forEach((m) => m(bot));
+roundServiceModules.forEach((m) => m(roundEvents));
 
 roundEvents.startWorker();
-
-roundEvents.on("resolveRound", async ({ data }) => {
-  console.log("Ставка закрыта");
-  await resolveGameRound(data.roundId);
-
-  bot.telegram.sendMessage(data.chatTelegramId.toString(), "Ставка закрыта");
-});
-
 bot.launch();
 
 console.log("The bot has launched");

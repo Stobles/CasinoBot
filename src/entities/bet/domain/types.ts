@@ -1,11 +1,17 @@
-export type BetData = RouletteBetData;
+import type { RouletteColors } from "@/kernel/game/roulette/types.js";
 
-export type RouletteBetData = {
-  color?: string;
-  number?: number | undefined;
+export type BetEntity = {
+  id: string;
+  roundId: string;
+  chatUserId: string;
+  type: BetType;
+  status: string;
+  amount: number;
+  data: BetData;
 };
 
-export const ROULETTE_BET_COLOR = {
-  black: "Черное",
-  red: "Красное",
-};
+export type BetData =
+  | { type: "number"; value: number }
+  | { type: "color"; value: RouletteColors };
+
+export type BetType = "ROULETTE";
