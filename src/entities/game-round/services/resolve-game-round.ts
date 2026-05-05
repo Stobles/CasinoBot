@@ -1,7 +1,7 @@
 import { prisma } from "@/shared/lib/db.js";
 import { left, right, type Either } from "@/shared/lib/either.js";
 import type { GameRoundEntity, GameRoundResult } from "../domain/types.js";
-import { getRouletteGameResult, mapGameRound } from "../domain/helpers.js";
+import { mapGameRound } from "../domain/helpers.js";
 
 export async function resolveGameRound(
   roundId: string,

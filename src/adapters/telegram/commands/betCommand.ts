@@ -2,9 +2,9 @@ import { getCurrentRound } from "@/entities/game-round/services/get-current-roun
 import { ensureSession } from "@/features/session/ensure-session.js";
 import type { Telegraf } from "telegraf";
 import { parseBetCommand } from "../helpers/getBetValues.js";
-import { ROULETTE_BET_COLOR } from "@/entities/bet/index.js";
 import { placeBet } from "@/features/betting/place-bet.js";
-import { ROULETTE_VALUES } from "@/entities/game-round/index.js";
+import { ROULETTE_VALUES } from "@/kernel/game/roulette/helpers.js";
+import { ROULETTE_COLORS_MAP } from "@/kernel/game/roulette/types.js";
 
 export function registerBetCommand(bot: Telegraf) {
   bot.command("dep", async (ctx) => {
@@ -33,7 +33,7 @@ export function registerBetCommand(bot: Telegraf) {
       });
 
       await ctx.reply(
-        `@${user.username} сделал ставку на ${ROULETTE_BET_COLOR[value.color]} ${value.number || ""} в размере ${value.amount} тугриков`,
+        `@${user.username} сделал ставку на ${ROULETTE_COLORS_MAP[value.color]} ${value.number || ""} в размере ${value.amount} тугриков`,
       );
     } catch (e) {
       if (e === "bet-limit-exceeded")

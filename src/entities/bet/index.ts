@@ -1,4 +1,4 @@
-export type { BetData } from "./domain/types.js";
-export { ROULETTE_BET_COLOR, ROULETTE_BET_COFF } from "./domain/types.js";
+export type { BetData, BetEntity, BetType } from "./domain/types.js";
+export { splitRouletteBets } from "./domain/helpers.js";
 
 export { createBet } from "./services/createBet.js";

@@ -1,47 +1,46 @@
-import { ROULETTE_BET_COFF } from "@/entities/bet/index.js";
-import type { GameRoundRouletteResult } from "@/entities/game-round/index.js";
-import type { RouletteResult } from "@/kernel/game/roulette/types.js";
+import { mapBetEntity } from "@/entities/bet/domain/helpers.js";
+import { splitRouletteBets, type BetEntity } from "@/entities/bet/index.js";
+import {
+  ROULETTE_COEFFICIENTS,
+  type RouletteResult,
+} from "@/kernel/game/roulette/types.js";
 import { prisma } from "@/shared/lib/db.js";
+import { left, right, type Either } from "@/shared/lib/either.js";
 
 export async function payoutBet(
   roundId: string,
-  result: GameRoundRouletteResult,
-) {
+  result: RouletteResult,
+): Promise<Either<"no-bets", { winners: BetEntity[]; losers: BetEntity[] }>> {
   return prisma.$transaction(async (tx) => {
-    // 1. забираем все открытые ставки
     const bets = await tx.roundBet.findMany({
       where: { roundId, status: "OPEN" },
+      include: {
+        chatUser: {
+          include: { user: true },
+        },
+      },
     });
 
-    console.log(bets);
+    if (!bets.length) return left("no-bets");
 
-    for (const bet of bets) {
-      const betData = bet.data as RouletteResult;
-      console.log(betData.color, result.color);
-      const isColorMatch = betData.color === result.color;
+    const mappedBets = bets.map(mapBetEntity);
 
-      const isNumberMatch = betData.number
-        ? betData.number === result.number
-        : true;
+    const { winners, losers } = splitRouletteBets(mappedBets, result);
 
-      const isWin = isColorMatch && isNumberMatch;
+    // 1. проигравшие — bulk update (быстрее и чище)
+    await tx.roundBet.updateMany({
+      where: {
+        id: { in: losers.map((b) => b.id) },
+      },
+      data: {
+        status: "LOST",
+      },
+    });
 
-      console.log(isWin, isColorMatch, isNumberMatch);
+    // 2. выигрыши — последовательно (или можно batch)
+    for (const bet of winners) {
+      const payout = bet.amount * ROULETTE_COEFFICIENTS[result.color];
 
-      if (!isWin) {
-        await tx.roundBet.update({
-          where: { id: bet.id },
-          data: { status: "LOST" },
-        });
-
-        continue;
-      }
-
-      console.log(bet);
-
-      const payout = bet.amount * ROULETTE_BET_COFF[result.color];
-
-      // 2. обновляем баланс пользователя
       await tx.chatUser.update({
         where: { id: bet.chatUserId },
         data: {
@@ -51,13 +50,11 @@ export async function payoutBet(
         },
       });
 
-      // 3. помечаем ставку как выигрыш
       await tx.roundBet.update({
         where: { id: bet.id },
         data: { status: "WON" },
       });
 
-      // 4. создаём транзакцию
       await tx.transaction.create({
         data: {
           chatUserId: bet.chatUserId,
@@ -66,5 +63,7 @@ export async function payoutBet(
         },
       });
     }
+
+    return right({ winners, losers });
   });
 }
