@@ -1,11 +1,14 @@
-import { left, right, type Either } from "@/shared/lib/either.js";
+import type { BetData } from "@/entities/bet/index.js";
+import type { RouletteColors } from "@/kernel/game/roulette/types.js";
+import { left, matchEither, right, type Either } from "@/shared/lib/either.js";
 
 type BetColor = "black" | "red";
 
 type ParsedBet = {
-  color: BetColor;
-  number: number | undefined;
+  color: RouletteColors;
   amount: number;
+  number: number | null;
+  bet: BetData;
 };
 
 const COLOR_MAP: Record<string, BetColor> = {
@@ -22,23 +25,17 @@ const COLOR_MAP: Record<string, BetColor> = {
 
 export function parseBetCommand(
   input: string,
-  values: Record<string, number[]>,
+  values: Record<BetColor, number[]>,
 ): Either<
-  "not-enough-args" | "wrong-command" | "wrong-color" | "wrong-number",
+  "not-enough-args" | "wrong-color" | "wrong-number" | "wrong-amount",
   ParsedBet
 > {
   const parts = input.trim().split(/\s+/);
 
-  // ожидаем: /bet <color> [number] <amount>
   if (parts.length < 3) {
     return left("not-enough-args");
   }
 
-  if (parts[0] !== "/dep") {
-    return left("wrong-command");
-  }
-
-  // --- COLOR ---
   const colorRaw = parts[1]!.toLowerCase();
   const color = COLOR_MAP[colorRaw];
 
@@ -46,39 +43,64 @@ export function parseBetCommand(
     return left("wrong-color");
   }
 
-  // --- NUMBER / AMOUNT ---
-  let number: number | undefined;
+  let bet: BetData;
+  let number: number | null = null;
   let amountRaw: string;
 
   if (parts.length === 3) {
-    // /bet красное 100
+    bet = {
+      type: "color",
+      value: color,
+    };
+
     amountRaw = parts[2]!;
   } else {
-    // /bet красное 12 100
     number = Number(parts[2]);
 
     if (!Number.isInteger(number)) {
       return left("wrong-number");
     }
 
-    // ✅ ключевая проверка через values
     if (!values[color].includes(number)) {
       return left("wrong-number");
     }
 
+    bet = {
+      type: "number",
+      value: number,
+    };
+
     amountRaw = parts[3]!;
   }
-
-  // --- AMOUNT ---
   const amount = Number(amountRaw);
 
   if (!Number.isFinite(amount) || amount <= 0) {
-    throw new Error("Некорректная ставка");
+    return left("wrong-amount");
   }
 
   return right({
     color,
     number,
+    bet,
     amount,
+  });
+}
+
+export function getParseBetCommandError(
+  result: Either<
+    "not-enough-args" | "wrong-color" | "wrong-number" | "wrong-amount",
+    ParsedBet
+  >,
+) {
+  return matchEither(result, {
+    right: () => null,
+    left: (e) =>
+      ({
+        "not-enough-args":
+          "Неверный формат команды: /dep <цвет> [число] <ставка>",
+        "wrong-color": "Такого цвета нет",
+        "wrong-number": "Этот цвет не содержит такого числа",
+        "wrong-amount": "Невалидная сумма для ставки",
+      })[e],
   });
 }

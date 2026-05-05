@@ -3,6 +3,15 @@ import { connection } from "@/shared/lib/queue.js";
 
 export type RoundEvent = ResolveRoundEvent;
 
+export interface IRoundEventService {
+  on<T extends RoundEvent["type"]>(
+    type: T,
+    listener: Listener<Extract<RoundEvent, { type: T }>>,
+  ): void;
+
+  emit(event: RoundEvent, opts?: { delay?: number }): Promise<void>;
+}
+
 type Listener<T> = (data: T) => void;
 
 type ResolveRoundEvent = {
@@ -10,7 +19,7 @@ type ResolveRoundEvent = {
   data: { roundId: string; chatTelegramId: string };
 };
 
-class RoundEventService {
+class RoundEventService implements IRoundEventService {
   private queue = new Queue("round", { connection });
 
   private handlers = new Map<RoundEvent["type"], Listener<any>>();

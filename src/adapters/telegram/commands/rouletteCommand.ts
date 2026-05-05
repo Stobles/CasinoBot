@@ -1,5 +1,6 @@
 import { createGameRound } from "@/entities/game-round/services/create-game-round.js";
 import { ensureSession } from "@/features/session/ensure-session.js";
+import { ROULETTE_ROUND_TIME } from "@/kernel/game/roulette/const.js";
 import path from "node:path";
 import type { Telegraf } from "telegraf";
 
@@ -18,14 +19,14 @@ export function registerRouletteCommand(bot: Telegraf) {
     }
     const rouletteImage = path.resolve(
       process.cwd(),
-      "./src/shared/assets/gorbachov_gamble.jpg",
+      "./src/shared/assets/roulette.jpg",
     );
 
     try {
       await ctx.replyWithPhoto(
         { source: rouletteImage },
         {
-          caption: "🎰 Создана рулетка на 60 секунд",
+          caption: `🎰 Создана рулетка на ${ROULETTE_ROUND_TIME} секунд`,
         },
       );
     } catch (error) {

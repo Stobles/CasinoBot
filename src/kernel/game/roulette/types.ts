@@ -1,7 +1,6 @@
-export const ROULETTE_COEFFICIENTS: Record<RouletteColors, number> = {
-  red: 2,
-  black: 2,
-  green: 14,
+export const ROULETTE_COEFFICIENTS: Record<"number" | "color", number> = {
+  number: 36,
+  color: 2,
 };
 
 export const ROULETTE_COLORS_MAP: Record<"black" | "red" | "green", string> = {

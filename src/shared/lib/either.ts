@@ -31,3 +31,17 @@ export const mapLeft =
   (e: Either<L, R>): Either<U, R> => {
     return e.type === "Left" ? left(fn(e.value)) : e;
   };
+
+export const matchEither = <L, R, V>(
+  either: Either<L, R>,
+  matchers: {
+    left: (error: NoInfer<L>) => V;
+    right: (value: NoInfer<R>) => V;
+  },
+): V => {
+  if (either.type === "Left") {
+    return matchers.left(either.value);
+  }
+
+  return matchers.right(either.value);
+};

@@ -1,5 +1,5 @@
 import type { RouletteResult } from "@/kernel/game/roulette/types.js";
-import type { BetEntity } from "./types.js";
+import type { BetData, BetEntity } from "./types.js";
 import type { RoundBet } from "@generated/prisma/client.js";
 
 export function mapBetEntity(bet: RoundBet): BetEntity {
@@ -9,7 +9,7 @@ export function mapBetEntity(bet: RoundBet): BetEntity {
     chatUserId: bet.chatUserId,
     type: bet.type,
     status: bet.status,
-    data: bet.data as RouletteResult,
+    data: bet.data as BetData,
     amount: bet.amount,
   };
 }
@@ -25,23 +25,17 @@ export function splitRouletteBets(
   const losers: BetEntity[] = [];
 
   for (const bet of bets) {
-    if (bet.type !== "ROULETTE") {
-      continue;
+    const data = bet.data;
+
+    let isWin = false;
+
+    if (data.type === "color") {
+      isWin = data.value === result.color;
     }
 
-    const data = bet.data as {
-      color: "green" | "red" | "black";
-      number?: number | null;
-    };
-
-    const isColorMatch = data.color === result.color;
-
-    const isNumberMatch =
-      data.number !== undefined && data.number !== null
-        ? data.number === result.number
-        : true;
-
-    const isWin = isColorMatch && isNumberMatch;
+    if (data.type === "number") {
+      isWin = data.value === result.number;
+    }
 
     if (isWin) {
       winners.push(bet);

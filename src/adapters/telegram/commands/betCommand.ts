@@ -1,7 +1,10 @@
 import { getCurrentRound } from "@/entities/game-round/services/get-current-round.js";
 import { ensureSession } from "@/features/session/ensure-session.js";
 import type { Telegraf } from "telegraf";
-import { parseBetCommand } from "../helpers/getBetValues.js";
+import {
+  getParseBetCommandError,
+  parseBetCommand,
+} from "../helpers/getBetValues.js";
 import { placeBet } from "@/features/betting/place-bet.js";
 import { ROULETTE_VALUES } from "@/kernel/game/roulette/helpers.js";
 import { ROULETTE_COLORS_MAP } from "@/kernel/game/roulette/types.js";
@@ -13,11 +16,14 @@ export function registerBetCommand(bot: Telegraf) {
     const parsedCommand = parseBetCommand(ctx.message.text, ROULETTE_VALUES);
 
     if (parsedCommand.type === "Left") {
-      await ctx.reply("Неправильная команда");
+      const error = getParseBetCommandError(parsedCommand);
+      if (error) await ctx.reply(error);
       return;
     }
 
-    const { value } = parsedCommand;
+    const {
+      value: { amount, bet, color, number },
+    } = parsedCommand;
 
     const currentRound = await getCurrentRound("ROULETTE", chat.id);
 
@@ -27,13 +33,10 @@ export function registerBetCommand(bot: Telegraf) {
     }
 
     try {
-      const bet = await placeBet(value.amount, currentRound.id, chatUser.id, {
-        color: "black",
-        number: value.number,
-      });
+      await placeBet(amount, currentRound.id, chatUser.id, bet);
 
       await ctx.reply(
-        `@${user.username} сделал ставку на ${ROULETTE_COLORS_MAP[value.color]} ${value.number || ""} в размере ${value.amount} тугриков`,
+        `@${user.username} сделал ставку на ${number || ""} ${ROULETTE_COLORS_MAP[color]} в размере ${amount} тугриков`,
       );
     } catch (e) {
       if (e === "bet-limit-exceeded")
