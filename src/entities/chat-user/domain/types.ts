@@ -19,4 +19,6 @@ export type ChatUserEntity = {
   chatId: string;
   userId: string;
   balance: number;
+  username: string | null;
+  dailyAt: Date | null;
 };

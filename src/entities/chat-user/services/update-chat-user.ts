@@ -1,16 +1,15 @@
 import { prisma } from "@/shared/lib/db.js";
 import type { Prisma } from "@generated/prisma/client.js";
-import type { ChatUserEntity } from "../domain/types.js";
 
-export async function getChatUser(
-  where: Prisma.ChatUserWhereInput,
-): Promise<(ChatUserEntity & { username: string | null }) | null> {
-  const chatUser = await prisma.chatUser.findFirst({
+export async function updateChatUser(
+  where: Prisma.ChatUserWhereUniqueInput,
+  data: Prisma.ChatUserUpdateInput,
+) {
+  const chatUser = await prisma.chatUser.update({
     where,
+    data,
     include: { user: true },
   });
-
-  if (!chatUser) return null;
 
   return {
     id: chatUser.id,

@@ -1,4 +1,7 @@
-import { BALANCE_STATUS } from "./types.js";
+import type { ChatUser, User } from "@generated/prisma/client.js";
+import { BALANCE_STATUS, type ChatUserEntity } from "./types.js";
+
+export const DAILY_PAYOUT = 500;
 
 export function getBalanceStatus(balance: number) {
   const statusEntries = Object.entries(BALANCE_STATUS)
@@ -16,4 +19,21 @@ export function getBalanceStatus(balance: number) {
   }
 
   return current;
+}
+
+export function formatChatUsersTop(top: ChatUserEntity[]): string {
+  return top
+    .map((u, i) => `${i + 1}. @${u.username} — ${u.balance}`)
+    .join("\n");
+}
+
+export function mapChatUser(user: ChatUser & { user: User }): ChatUserEntity {
+  return {
+    id: user.id,
+    balance: user.balance,
+    dailyAt: user.dailyAt,
+    username: user.user.username,
+    chatId: user.chatId,
+    userId: user.userId,
+  };
 }

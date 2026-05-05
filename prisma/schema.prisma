@@ -45,7 +45,8 @@ model ChatUser {
   user User @relation(fields: [userId], references: [id])
   chat Chat @relation(fields: [chatId], references: [id])
 
-  balance Int @default(0)
+  balance Int       @default(0)
+  dailyAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,6 +1,7 @@
 import {
   registerBalanceCommand,
   registerBetCommand,
+  registerDailyCommand,
   registerMessageListener,
   registerRouletteCommand,
   type TelegramModule,
@@ -17,6 +18,7 @@ const telegramModules: TelegramModule[] = [
   registerBalanceCommand,
   registerRouletteCommand,
   registerMessageListener,
+  registerDailyCommand,
   registerBetCommand,
 ];
 
