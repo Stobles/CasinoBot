@@ -1,3 +1,5 @@
+import { BALANCE_CURRENCY } from "@/shared/consts/const.js";
+
 export function formatUserStats(stats: {
   balance: number;
   winRate: number;
@@ -12,7 +14,7 @@ export function formatUserStats(stats: {
     `Процент выигрышей: ${stats.winRate.toFixed(2)}%.`,
     `Поставлено ставок: ${stats.totalBets}.`,
     `Выиграно ставок: ${stats.wonBets}.`,
-    `Выиграно: ${stats.wonAmount} тугриков.`,
+    `Выиграно: ${stats.wonAmount} ${BALANCE_CURRENCY}.`,
     `Проиграно: ${stats.lostAmount} тугриков.`,
   ].join("\n");
 }

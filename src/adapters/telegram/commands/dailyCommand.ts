@@ -4,6 +4,7 @@ import {
   getDailyPayoutError,
 } from "@/features/payout/daily-payout.js";
 import { ensureSession } from "@/features/session/ensure-session.js";
+import { BALANCE_CURRENCY } from "@/shared/consts/const.js";
 import type { Telegraf } from "telegraf";
 
 export function registerDailyCommand(bot: Telegraf) {
@@ -19,6 +20,8 @@ export function registerDailyCommand(bot: Telegraf) {
       return;
     }
 
-    await ctx.sendMessage(`💸 Лови монету, братик (+${DAILY_PAYOUT})`);
+    await ctx.sendMessage(
+      `💸 Лови монету, братик (+${DAILY_PAYOUT}${BALANCE_CURRENCY})`,
+    );
   });
 }

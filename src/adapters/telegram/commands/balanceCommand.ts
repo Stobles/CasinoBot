@@ -1,5 +1,6 @@
 import { getBalanceStatus } from "@/entities/chat-user/index.js";
 import { ensureSession } from "@/features/session/ensure-session.js";
+import { BALANCE_CURRENCY } from "@/shared/consts/const.js";
 import type { Telegraf } from "telegraf";
 
 export function registerBalanceCommand(bot: Telegraf) {
@@ -9,7 +10,7 @@ export function registerBalanceCommand(bot: Telegraf) {
     const balance = chatUser.balance;
 
     await ctx.reply(
-      `💰 Баланс @${chatUser.username}: ${balance} тугриков (${getBalanceStatus(balance)})`,
+      `💰 Баланс @${chatUser.username}: ${balance}${BALANCE_CURRENCY} (${getBalanceStatus(balance)})`,
     );
   });
 }
