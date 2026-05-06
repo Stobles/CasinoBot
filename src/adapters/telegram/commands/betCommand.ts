@@ -8,6 +8,7 @@ import {
 import { getPlaceBetError, placeBet } from "@/features/betting/place-bet.js";
 import { ROULETTE_VALUES } from "@/kernel/game/roulette/helpers.js";
 import { ROULETTE_COLORS_MAP } from "@/kernel/game/roulette/types.js";
+import { BALANCE_CURRENCY } from "@/shared/consts/const.js";
 
 export function registerBetCommand(bot: Telegraf) {
   bot.command("dep", async (ctx) => {
@@ -46,7 +47,7 @@ export function registerBetCommand(bot: Telegraf) {
     }
 
     await ctx.reply(
-      `@${user.username} сделал ставку на ${number ? `${number} ` : ""}${ROULETTE_COLORS_MAP[color]} в размере ${amount} тугриков`,
+      `@${user.username} сделал ставку на ${number ? `${number} ` : ""}${ROULETTE_COLORS_MAP[color]} в размере ${amount}${BALANCE_CURRENCY}`,
     );
   });
 }

@@ -43,18 +43,19 @@ export function parseBetCommand(
 > {
   const parts = input.trim().split(/\s+/);
 
+  // /dep amount color [number]
   if (parts.length < 3) {
     return left("not-enough-args");
   }
 
-  const colorRaw = parts[1]!.toLowerCase();
+  const amountRaw = parts[1]!;
+  const colorRaw = parts[2]!.toLowerCase();
+
   const color = COLOR_MAP[colorRaw];
 
   if (!color) {
     return left("wrong-color");
   }
-
-  const amountRaw = parts[parts.length - 1]!;
 
   if (!isNumberish(amountRaw)) {
     return left("wrong-amount");
@@ -70,7 +71,7 @@ export function parseBetCommand(
   let bet: BetData;
 
   /**
-   * 🟢 SPECIAL CASE: green color → number bet 0
+   * 🟢 SPECIAL CASE: green → always number bet 0
    */
   if (color === "green") {
     number = 0;
@@ -93,7 +94,7 @@ export function parseBetCommand(
   }
 
   /**
-   * CASE 1: /dep red 100
+   * CASE 1: /dep amount red
    */
   if (parts.length === 3) {
     bet = {
@@ -110,9 +111,9 @@ export function parseBetCommand(
   }
 
   /**
-   * CASE 2: /dep red 12 100
+   * CASE 2: /dep amount red 12
    */
-  const maybeNumber = toInt(parts[2]!);
+  const maybeNumber = toInt(parts[3]!);
 
   if (maybeNumber === null) {
     return left("wrong-number");
