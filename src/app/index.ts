@@ -2,7 +2,6 @@ import {
   registerBalanceCommand,
   registerBetCommand,
   registerDailyCommand,
-  registerMessageListener,
   registerRouletteCommand,
   registerStatsCommand,
   registerTopCommand,
@@ -19,7 +18,6 @@ import "dotenv/config";
 const telegramModules: TelegramModule[] = [
   registerBalanceCommand,
   registerRouletteCommand,
-  registerMessageListener,
   registerDailyCommand,
   registerBetCommand,
   registerTopCommand,
