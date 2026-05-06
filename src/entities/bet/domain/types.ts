@@ -5,7 +5,7 @@ export type BetEntity = {
   roundId: string;
   chatUserId: string;
   type: BetType;
-  status: string;
+  status: BetStatus;
   amount: number;
   payload: BetData;
 };
@@ -15,3 +15,5 @@ export type BetData =
   | { type: "color"; value: RouletteColors };
 
 export type BetType = "ROULETTE";
+
+export type BetStatus = "WON" | "OPEN" | "LOST";

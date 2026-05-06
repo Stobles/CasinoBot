@@ -1,5 +1,6 @@
 import { prisma } from "@/shared/lib/db.js";
 import type { Prisma } from "@generated/prisma/client.js";
+import { mapChatUser } from "../domain/helpers.js";
 
 export async function updateChatUser(
   where: Prisma.ChatUserWhereUniqueInput,
@@ -11,12 +12,5 @@ export async function updateChatUser(
     include: { user: true },
   });
 
-  return {
-    id: chatUser.id,
-    chatId: chatUser.chatId,
-    userId: chatUser.userId,
-    username: chatUser.user.username,
-    balance: chatUser.balance,
-    dailyAt: chatUser.dailyAt,
-  };
+  return mapChatUser(chatUser);
 }

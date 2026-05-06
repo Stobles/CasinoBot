@@ -1,6 +1,7 @@
 import { prisma } from "@/shared/lib/db.js";
 import type { Prisma } from "@generated/prisma/client.js";
 import type { ChatUserEntity } from "../domain/types.js";
+import { mapChatUser } from "../domain/helpers.js";
 
 export async function getChatUsers(
   where: Prisma.ChatUserWhereInput,
@@ -10,12 +11,5 @@ export async function getChatUsers(
     include: { user: true },
   });
 
-  return chatUser.map((item) => ({
-    id: item.id,
-    chatId: item.chatId,
-    userId: item.userId,
-    username: item.user.username,
-    balance: item.balance,
-    dailyAt: item.dailyAt,
-  }));
+  return chatUser.map(mapChatUser);
 }

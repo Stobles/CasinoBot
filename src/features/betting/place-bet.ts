@@ -1,5 +1,6 @@
 import { mapBetEntity } from "@/entities/bet/domain/helpers.js";
 import type { BetData, BetEntity } from "@/entities/bet/index.js";
+import { ROULETTE_MAX_BETS } from "@/kernel/game/roulette/const.js";
 import { prisma } from "@/shared/lib/db.js";
 import { left, matchEither, right, type Either } from "@/shared/lib/either.js";
 
@@ -52,7 +53,7 @@ export async function placeBet(
       },
     });
 
-    if (betsCount >= 3) {
+    if (betsCount >= ROULETTE_MAX_BETS) {
       return left("bet-limit-exceeded");
     }
 
