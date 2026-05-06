@@ -13,6 +13,13 @@ export function registerBetCommand(bot: Telegraf) {
   bot.command("dep", async (ctx) => {
     const { user, chat, chatUser } = await ensureSession(ctx);
 
+    const currentRound = await getCurrentRound("ROULETTE", chat.id);
+
+    if (!currentRound) {
+      await ctx.reply("❌ В чате не создана рулетка");
+      return;
+    }
+
     const parsedCommand = parseBetCommand(ctx.message.text, ROULETTE_VALUES);
 
     if (parsedCommand.type === "Left") {
@@ -24,13 +31,6 @@ export function registerBetCommand(bot: Telegraf) {
     const {
       value: { amount, bet, color, number },
     } = parsedCommand;
-
-    const currentRound = await getCurrentRound("ROULETTE", chat.id);
-
-    if (!currentRound) {
-      await ctx.reply("В чате не создана рулетка");
-      return;
-    }
 
     const placeBetResult = await placeBet(
       amount,

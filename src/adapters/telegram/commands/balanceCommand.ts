@@ -9,7 +9,7 @@ export function registerBalanceCommand(bot: Telegraf) {
     const balance = chatUser.balance;
 
     await ctx.reply(
-      `💰 Баланс: ${balance} тугриков (${getBalanceStatus(balance)})`,
+      `💰 Баланс @${chatUser.username}: ${balance} тугриков (${getBalanceStatus(balance)})`,
     );
   });
 }

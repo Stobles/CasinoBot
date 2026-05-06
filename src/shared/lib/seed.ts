@@ -5,8 +5,29 @@ async function main() {
     where: { username: "Stoble" },
   });
 
+  const prayfolove = await prisma.user.findMany({
+    where: { username: "prayflove" },
+  });
+
+  const istayvoided = await prisma.user.findMany({
+    where: { username: "istayvoided" },
+  });
+
+  const leaninthatea = await prisma.user.findMany({
+    where: { username: "leaninthatea" },
+  });
+
   await prisma.chatUser.updateMany({
-    where: { userId: stoble[0]!.id },
+    where: {
+      userId: {
+        in: [
+          stoble[0]!.id,
+          prayfolove[0]!.id,
+          istayvoided[0]!.id,
+          leaninthatea[0]!.id,
+        ],
+      },
+    },
     data: {
       balance: 50000,
     },

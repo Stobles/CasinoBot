@@ -2,8 +2,6 @@ import type { BetData } from "@/entities/bet/index.js";
 import type { RouletteColors } from "@/kernel/game/roulette/types.js";
 import { left, matchEither, right, type Either } from "@/shared/lib/either.js";
 
-type BetColor = "black" | "red";
-
 type ParsedBet = {
   color: RouletteColors;
   amount: number;
@@ -11,7 +9,7 @@ type ParsedBet = {
   bet: BetData;
 };
 
-const COLOR_MAP: Record<string, BetColor> = {
+const COLOR_MAP: Record<string, RouletteColors> = {
   черное: "black",
   чёрное: "black",
   черный: "black",
@@ -21,11 +19,15 @@ const COLOR_MAP: Record<string, BetColor> = {
   красное: "red",
   красный: "red",
   red: "red",
+
+  зелёное: "green",
+  зеленое: "green",
+  green: "green",
 };
 
 export function parseBetCommand(
   input: string,
-  values: Record<BetColor, number[]>,
+  values: Record<RouletteColors, number[]>,
 ): Either<
   "not-enough-args" | "wrong-color" | "wrong-number" | "wrong-amount",
   ParsedBet
@@ -72,9 +74,13 @@ export function parseBetCommand(
 
     amountRaw = parts[3]!;
   }
+  if (!/^\d+$/.test(amountRaw)) {
+    return left("wrong-amount");
+  }
+
   const amount = Number(amountRaw);
 
-  if (!Number.isFinite(amount) || amount <= 0) {
+  if (!Number.isFinite(amount) || amount <= 0 || amount >= 1000000) {
     return left("wrong-amount");
   }
 
