@@ -2,12 +2,12 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
       "@features/*": ["features/*"],
-      "@generated/*": ["../generated/*"]
+      "@generated/*": ["shared/generated/*"]
     },
 
     "module": "nodenext",
