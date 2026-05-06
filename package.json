@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npx prisma generate",
     "dev": "tsx watch ./src/app/index.ts",
     "seed": "npx prisma db seed",
     "migrate:dev": "npx prisma migrate dev && npx prisma generate",
