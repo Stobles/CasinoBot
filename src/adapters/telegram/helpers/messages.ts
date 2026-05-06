@@ -60,6 +60,6 @@ export function formatUserStats(stats: {
     `Поставлено ставок: ${stats.totalBets}.`,
     `Выиграно ставок: ${stats.wonBets}.`,
     `Выиграно: ${stats.wonAmount} ${BALANCE_CURRENCY}.`,
-    `Проиграно: ${stats.lostAmount} тугриков.`,
+    `Проиграно: ${stats.lostAmount} ${BALANCE_CURRENCY}.`,
   ].join("\n");
 }

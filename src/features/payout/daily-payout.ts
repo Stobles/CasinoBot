@@ -1,7 +1,7 @@
-import { DAILY_PAYOUT } from "@/entities/chat-user/domain/helpers.js";
 import type { ChatUserEntity } from "@/entities/chat-user/index.js";
 import { getChatUser } from "@/entities/chat-user/services/get-chat-user.js";
 import { updateChatUser } from "@/entities/chat-user/services/update-chat-user.js";
+import { DAILY_PAYOUT } from "@/shared/consts/const.js";
 import {
   formatMsToHM,
   getRemainingCooldownMs,
