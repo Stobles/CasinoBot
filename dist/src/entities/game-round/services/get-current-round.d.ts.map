@@ -1,1 +1,0 @@
-{"version":3,"file":"get-current-round.d.ts","sourceRoot":"","sources":["../../../../../src/entities/game-round/services/get-current-round.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,eAAe,EAAE,cAAc,EAAE,MAAM,oBAAoB,CAAC;AAG1E,wBAAsB,eAAe,CACnC,IAAI,EAAE,cAAc,EACpB,MAAM,EAAE,MAAM,GACb,OAAO,CAAC,eAAe,GAAG,IAAI,CAAC,CAQjC"}
