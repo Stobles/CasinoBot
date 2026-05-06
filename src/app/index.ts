@@ -4,6 +4,7 @@ import {
   registerDailyCommand,
   registerMessageListener,
   registerRouletteCommand,
+  registerStatsCommand,
   registerTopCommand,
   type TelegramModule,
 } from "../adapters/telegram/index.js";
@@ -22,6 +23,7 @@ const telegramModules: TelegramModule[] = [
   registerDailyCommand,
   registerBetCommand,
   registerTopCommand,
+  registerStatsCommand,
 ];
 
 const roundServiceModules: RoundServiceModule[] = [
