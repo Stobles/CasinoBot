@@ -1,0 +1,1 @@
+{"version":3,"file":"getTopUsers.d.ts","sourceRoot":"","sources":["../../../../src/features/statistic/getTopUsers.ts"],"names":[],"mappings":"AACA,OAAO,EAEL,KAAK,cAAc,EACpB,MAAM,+BAA+B,CAAC;AACvC,OAAO,EAAe,KAAK,MAAM,EAAE,MAAM,wBAAwB,CAAC;AAElE,wBAAsB,eAAe,CACnC,MAAM,EAAE,MAAM,GACb,OAAO,CAAC,MAAM,CAAC,UAAU,EAAE,cAAc,EAAE,CAAC,CAAC,CAQ/C"}

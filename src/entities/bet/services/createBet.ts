@@ -5,7 +5,7 @@ export async function createBet(
   amount: number,
   roundId: string,
   chatUserId: string,
-  data: BetData,
+  payload: BetData,
 ) {
   const userBetCount = await prisma.roundBet.count({
     where: { roundId, chatUserId },
@@ -20,7 +20,7 @@ export async function createBet(
       roundId,
       chatUserId,
       amount,
-      data,
+      payload,
     },
   });
 }
