@@ -1,46 +1,67 @@
 import { pool, prisma } from "./db.js";
 
+function getArg(name: string): string | undefined {
+  const argv = process.argv;
+
+  const index = argv.findIndex((a) => a === `--${name}`);
+  if (index !== -1) {
+    return argv[index + 1];
+  }
+
+  const withEquals = argv.find((a) => a.startsWith(`--${name}=`));
+
+  return withEquals?.split("=")[1];
+}
+
 async function main() {
-  const stoble = await prisma.user.findMany({
-    where: { username: "Stoble" },
+  const balanceRaw = getArg("balance");
+
+  if (!balanceRaw || !/^\d+$/.test(balanceRaw)) {
+    throw new Error("Используй: npx prisma db seed -- -- --balance 5000");
+  }
+
+  const balance = Number(balanceRaw);
+
+  const usernamesRaw = getArg("usernames");
+
+  if (usernamesRaw && !/^[^,\s]+(,[^,\s]+)*$/.test(usernamesRaw)) {
+    throw new Error("usernames должны быть такого вида: stoble,prayflove,...");
+  }
+
+  const usernames = usernamesRaw
+    ? usernamesRaw.split(",")
+    : ["Stoble", "prayflove", "istayvoided", "leaninthatea"];
+
+  console.log(usernames);
+
+  const users = await prisma.user.findMany({
+    where: {
+      username: {
+        in: usernames,
+      },
+    },
+    select: { id: true },
   });
 
-  const prayfolove = await prisma.user.findMany({
-    where: { username: "prayflove" },
-  });
-
-  const istayvoided = await prisma.user.findMany({
-    where: { username: "istayvoided" },
-  });
-
-  const leaninthatea = await prisma.user.findMany({
-    where: { username: "leaninthatea" },
-  });
+  if (users.length === 0) {
+    throw new Error("Пользователи не найдены");
+  }
 
   await prisma.chatUser.updateMany({
     where: {
       userId: {
-        in: [
-          stoble[0]!.id,
-          prayfolove[0]!.id,
-          istayvoided[0]!.id,
-          leaninthatea[0]!.id,
-        ],
+        in: users.map((u) => u.id),
       },
     },
     data: {
-      balance: 50000,
+      balance,
     },
   });
+
+  console.log(`Баланс обновлён: ${balance}`);
 }
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-    await pool.end();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    await pool.end();
-    process.exit(1);
-  });
+
+main().finally(async () => {
+  await prisma.$disconnect();
+  await pool.end();
+});

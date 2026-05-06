@@ -1,7 +1,8 @@
-import { formatChatUsersTop } from "@/entities/chat-user/domain/helpers.js";
+import { formatChatUsersTop } from "../helpers/formatChatUsersTop.js";
 import { ensureSession } from "@/features/session/ensure-session.js";
 import { getChatUsersTop } from "@/features/statistic/getTopUsers.js";
 import type { Telegraf } from "telegraf";
+import { messages } from "../helpers/messages.js";
 
 export async function registerTopCommand(bot: Telegraf) {
   bot.command("top", async (ctx) => {
@@ -14,8 +15,13 @@ export async function registerTopCommand(bot: Telegraf) {
       return;
     }
 
-    const message = `Топ пользователей казика в чате:\n\n ${formatChatUsersTop(chatUsersTopResult.value)}\n\n`;
+    const topChatUsers = chatUsersTopResult.value.map((item) => ({
+      username: item.username || "",
+      balance: item.balance,
+    }));
 
-    await ctx.reply(message, { parse_mode: "MarkdownV2" });
+    await ctx.reply(messages.stats.topUsers(topChatUsers), {
+      parse_mode: "MarkdownV2",
+    });
   });
 }

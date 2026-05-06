@@ -7,8 +7,7 @@ import {
 } from "../helpers/getBetValues.js";
 import { getPlaceBetError, placeBet } from "@/features/betting/place-bet.js";
 import { ROULETTE_VALUES } from "@/kernel/game/roulette/helpers.js";
-import { ROULETTE_COLORS_MAP } from "@/kernel/game/roulette/types.js";
-import { BALANCE_CURRENCY } from "@/shared/consts/const.js";
+import { messages } from "../helpers/messages.js";
 
 export function registerBetCommand(bot: Telegraf) {
   bot.command("dep", async (ctx) => {
@@ -17,7 +16,7 @@ export function registerBetCommand(bot: Telegraf) {
     const currentRound = await getCurrentRound("ROULETTE", chat.id);
 
     if (!currentRound) {
-      await ctx.reply("❌ В чате не создана рулетка");
+      await ctx.reply(messages.betting.noRound);
       return;
     }
 
@@ -47,7 +46,7 @@ export function registerBetCommand(bot: Telegraf) {
     }
 
     await ctx.reply(
-      `@${user.username} сделал ставку на ${number ? `${number} ` : ""}${ROULETTE_COLORS_MAP[color]} в размере ${amount}${BALANCE_CURRENCY}`,
+      messages.betting.placed(user.username || "", number, color, amount),
     );
   });
 }
