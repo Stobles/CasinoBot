@@ -8,6 +8,7 @@ import {
 import { getPlaceBetError, placeBet } from "@/features/betting/place-bet.js";
 import { ROULETTE_VALUES } from "@/kernel/game/roulette/helpers.js";
 import { messages } from "../helpers/messages.js";
+import { ROULETTE_COLORS_MAP } from "@/kernel/game/roulette/types.js";
 
 export function registerBetCommand(bot: Telegraf) {
   bot.command("dep", async (ctx) => {
@@ -46,7 +47,12 @@ export function registerBetCommand(bot: Telegraf) {
     }
 
     await ctx.reply(
-      messages.betting.placed(user.username || "", number, color, amount),
+      messages.betting.placed(
+        user.username || "",
+        number,
+        ROULETTE_COLORS_MAP[color],
+        amount,
+      ),
     );
   });
 }
