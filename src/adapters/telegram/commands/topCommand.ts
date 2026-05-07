@@ -3,6 +3,7 @@ import { ensureSession } from "@/features/session/ensure-session.js";
 import { getChatUsersTop } from "@/features/statistic/getTopUsers.js";
 import type { Telegraf } from "telegraf";
 import { messages } from "../helpers/messages.js";
+import { escapeMarkdownV2 } from "../helpers/escapeMarkdownV2.js";
 
 export async function registerTopCommand(bot: Telegraf) {
   bot.command("top", async (ctx) => {
@@ -16,7 +17,7 @@ export async function registerTopCommand(bot: Telegraf) {
     }
 
     const topChatUsers = chatUsersTopResult.value.map((item) => ({
-      username: item.username || "",
+      username: escapeMarkdownV2(item.username || ""),
       balance: item.balance,
     }));
 
