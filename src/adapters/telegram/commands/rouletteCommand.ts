@@ -3,6 +3,7 @@ import { ensureSession } from "@/features/session/ensure-session.js";
 import { ROULETTE_ROUND_TIME } from "@/kernel/game/roulette/const.js";
 import path from "node:path";
 import type { Telegraf } from "telegraf";
+import { messages } from "../helpers/messages.js";
 
 export function registerRouletteCommand(bot: Telegraf) {
   bot.command("roll", async (ctx) => {
@@ -15,7 +16,7 @@ export function registerRouletteCommand(bot: Telegraf) {
     );
 
     if (gameRound.type === "Left") {
-      await ctx.reply("❌ Рулетка уже создана в чате");
+      await ctx.reply(messages.roulette.alreadyCreated);
       return;
     }
     const rouletteImage = path.resolve(
@@ -27,11 +28,11 @@ export function registerRouletteCommand(bot: Telegraf) {
       await ctx.replyWithPhoto(
         { source: rouletteImage },
         {
-          caption: `🎰 Создана рулетка на ${ROULETTE_ROUND_TIME} секунд`,
+          caption: messages.roulette.created,
         },
       );
     } catch (error) {
-      await ctx.reply(`❌ Непредвиденная ошибка ${error}`);
+      await ctx.reply(messages.roulette.error(error));
     }
   });
 }
